@@ -1,13 +1,16 @@
-#include gram_schmidt.h
+#include "gram_schmidt.h"
+#include "vector_math_functions.h"
+#include <stdlib.h>
+#include <math.h>
 
 // structure with Gram-Schmidt information
-struct return_schmidt {
-    double ** mu;
-    double ** gs_basis;
-};
+// struct return_schmidt {
+//     double ** mu;
+//     double ** gs_basis;
+// };
 
 // Function to get Gram Schmidt information from set of basis vectors
-struct return_schmidt gram_schmidt(double ** basis, int N){
+gs_info gram_schmidt(double ** basis, int N){
 
     // initialise new basis and allocate necessary memory
     double ** gs_basis = malloc(sizeof(double*)*N);
@@ -50,7 +53,7 @@ struct return_schmidt gram_schmidt(double ** basis, int N){
 
 
     // define structure to return both structures
-    struct return_schmidt return_val = {mu, gs_basis};
+    gs_info return_val = {mu, gs_basis};
 
     return return_val;
 }
