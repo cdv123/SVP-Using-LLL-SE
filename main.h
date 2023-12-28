@@ -8,7 +8,7 @@ void swap_arr(double * l1, double * l2, int N);
 
 void size_reduction(double ** basis, double ** mu, int k, int N);
 
-void LLL(double ** basis, int N);
+gs_info LLL(double ** basis, int N);
 
 int get_n(int argc, char * argv[]);
 
