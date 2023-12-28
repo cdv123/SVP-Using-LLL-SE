@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 #include "gram_schmidt.h"
 #include "vector_math_functions.h"
 
-// #include "vector_math_functions.c"
-
+// function to get a lower bound on the norm of the shortest vector
 double get_search_area(double ** basis, int N){
 
     double gamma_n = (double)(N + 1)/4;
@@ -16,7 +16,7 @@ double get_search_area(double ** basis, int N){
         vol_l = vol_l * sqrt(dot_product(basis[i], basis[i], N));
     }
 
-    vol_l = pow(vol_l, 1/N);
+    vol_l = pow(vol_l, (double)1/N);
     return square(gamma_n*vol_l);
 
 }
@@ -33,8 +33,8 @@ double svp(double ** basis, int N){
     double ** gs_basis = gram_schmidt_info.gs_basis;
 
     // get search area (upper bound where solution can be found)
-    // double r_squared = get_search_area(gs_basis, N);
-    double r_squared = dot_product(basis[0], basis[0], N);
+    double r_squared = get_search_area(gs_basis, N);
+    // double r_squared = dot_product(basis[0], basis[0], N);
 
     // initialise variables with 0s and allocate necessary memory
     double *p = calloc(sizeof(double), N+1);
@@ -192,27 +192,45 @@ void LLL(double ** basis, int N) {
         }
     }
 }
-
-
-int main() {
-    // printf("%d\n", argc);
-    // for (int i = 1; i < argc; i++){
-    //     printf("%s\n", argv[i]);
-    // }
-    int N = 10;
-    // double init_basis[10][10] = {{14800322531141549294, 1, 0, 0, 0, 0, 0, 0, 0, 0}, {17796564942578567201, 0, 1, 0, 0, 0, 0, 0, 0, 0}, {7301743052718098431, 0, 0, 1, 0, 0, 0, 0, 0, 0}, {5792622719448160275, 0, 0, 0, 1, 0, 0, 0, 0, 0}, {13825670105792957044, 0, 0, 0, 0, 1, 0, 0, 0, 0}, {7338474235679864976, 0, 0, 0, 0, 0, 1, 0, 0, 0}, {6466088670324559620, 0, 0, 0, 0, 0, 0, 1, 0, 0}, {5315957138953616152, 0, 0, 0, 0, 0, 0, 0, 1, 0}, {7038974009087367626, 0, 0, 0, 0, 0, 0, 0, 0, 1}, {13662771198155157402, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
-    double init_basis[10][10] = {{3462528728, 444363041, 953498107, 3019162, 293072558, 454157756, 1950819278, 2174448309, 2956307025, 2050440410}, {1676991435, 2190045933, 3360605833, 3782131535, 1076691369, 1286267085, 3124954673, 1356441824, 1675223571, 3617515077}, {3467837865, 2727897666, 2512785299, 3013662465, 108820214, 2883385007, 1068246967, 798890469, 2874893319, 279879480}, {3036791821, 956443849, 199347373, 1643597530, 1622084324, 471638746, 1055553070, 2020155791, 1772672903, 179014643}, {3726309520, 3416039174, 816778328, 4178510478, 1052560161, 2365858231, 3810589638, 1478643591, 3537405930, 1196123656}, {2101281032, 731853286, 35290828, 1463099681, 62123405, 1905949073, 3166373256, 2899371508, 674265594, 3891491225}, {2924313520, 4018395377, 1444789986, 2465339761, 1288445553, 3964167277, 3710424026, 2819673876, 103363586, 3597674584}, {3237227071, 578279073, 119471827, 325475776, 1510452858, 210663454, 2633248087, 2140229824, 153673582, 2811110910}, {1566590271, 1264942241, 750770120, 1308334483, 1808072791, 1483343336, 4170849932, 3261787946, 1391377726, 2865208703}, {1950175842, 47002310, 377036287, 1445470496, 1706137745, 2166273829, 1896680823, 2831856618, 2825133614, 3610138421}};
-    // double init_basis[2][2] = {{2709894480, 2051880200}, {3409234876, 724643694}};
-    // double init_basis[3][3] = {{1,-1,3}, {1,0,5}, {1,2,6}};
-    // double init_basis[2][2] = {{18704, 43309}, {64726, 54865}};
-    double ** basis = malloc(sizeof(double)*N);
-    double ans;
-    for (int i = 0; i < N; i++){
-        basis[i] = malloc(sizeof(double)*N);
-        for (int j = 0; j < N; j++){
-            basis[i][j] = init_basis[i][j];
+int get_n(int argc, char* argv[]){
+    int char_num = 0;
+    int arg_num = 0;
+    int N = 1;
+    for (int i = 0; i < argc; i++){
+        if (argv[i][strlen(argv[i])-1] != ']'){
+            N+=1;
+        }
+        else {
+            break;
         }
     }
+    return N;
+}
+void read_input(double ** basis, int argc, char* argv[], int N){
+    int index = 0;
+    int extra = 0;
+    for (int i = 0; i < N; i++){
+        basis[i] = malloc(sizeof(double)*N);
+        for (int j = 0; j<N; j++){
+            if (argv[index][0] == '['){
+                extra = 1;
+            }
+            else{
+                extra = 0;
+            }
+            basis[i][j] = strtod(argv[index]+extra, NULL);
+            index+=1;
+        }
+    }
+
+}
+
+int main(int argc, char *argv[]) {
+    int N = get_n(argc-1, argv+1);
+    double ** basis = malloc(N*sizeof(double));
+    read_input(basis, argc-1, argv+1, N);
+    print_2d_arr(basis, N);
+    double ans;
 
     ans = svp(basis, N);
     // LLL(basis, N);
@@ -220,11 +238,15 @@ int main() {
     // for (int i = 0; i < N; i++){ 
     //     printf("%f\n", sqrt(dot_product(basis[i], basis[i], N)));
     // }
-    // for (int i = 0; i < N; i++){
-    //     for (int j = 0; j < N; j++){
-    //         printf("%f ", basis[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    printf("Value of answer: %f\n", ans);
+    FILE *file = fopen("result.txt", "w");
+
+    if (file == NULL){
+        perror("Error opening file");
+        return -1;
+    }
+
+    fprintf(file, "%f", ans);
+    fclose(file);
+    
+    return 0;
 }

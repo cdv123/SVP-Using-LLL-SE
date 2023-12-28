@@ -3,12 +3,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-// structure with Gram-Schmidt information
-// struct return_schmidt {
-//     double ** mu;
-//     double ** gs_basis;
-// };
-
 // Function to get Gram Schmidt information from set of basis vectors
 gs_info gram_schmidt(double ** basis, int N){
 
