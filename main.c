@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "gram_schmidt.h"
+#include "main.h"
 #include "vector_math_functions.h"
 
 // function to get a lower bound on the norm of the shortest vector
