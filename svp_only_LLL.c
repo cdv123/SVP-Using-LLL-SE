@@ -87,7 +87,7 @@ double svp(double ** basis, int N){
     // gs_info gram_schmidt_info = gram_schmidt(basis, N);
     gs_info gram_schmidt_info = LLL(basis, N);
 
-    if (N < 5){
+    if (1){
         return sqrt(dot_product(basis[0], basis[0], N));
     }
 
