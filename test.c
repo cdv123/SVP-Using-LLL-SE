@@ -4,6 +4,7 @@
 #include <math.h>
 #include "svp.h"
 
+// get nummber of dimensions from input
 int get_dim(char * string){
     int length = strlen(string);
     int N = -1;
@@ -98,7 +99,7 @@ int main(){
     
     FILE * fptr = fopen("tests.txt", "r");
     FILE * fptr2 = fopen("test_results.txt", "r");  
-    double results[6];
+    double results[7];
     char myString[10000];
     int i = 0;
 

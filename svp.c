@@ -17,12 +17,10 @@ void print_2d_arr(double ** arr, int N){
 double get_search_area(double ** basis, int N){
     double gamma_n = ((double)N)/4.0 + 1.0;
     gamma_n = sqrt(gamma_n);
-    print_2d_arr(basis, N);
     double vol_l = 1;
     for (int i = 0; i< N; i++){
         vol_l = vol_l * sqrt(dot_product(basis[i], basis[i], N));
     }
-    printf("%f\n", vol_l);
     vol_l = pow(vol_l, (double)1/(double)N);
     double temp = gamma_n*vol_l;
     return square(gamma_n*vol_l);
@@ -93,7 +91,6 @@ double svp(double ** basis, int N){
     // gs_info gram_schmidt_info = gram_schmidt(basis, N);
     gs_info gram_schmidt_info = LLL(basis, N);
 
-    print_2d_arr(basis, N);
     if (N < 5){
         return sqrt(dot_product(basis[0], basis[0], N));
     }
@@ -104,7 +101,6 @@ double svp(double ** basis, int N){
 
     // get search area (upper bound where solution can be found)
     double r_squared = get_search_area(gs_basis, N);
-    printf("%f\n", r_squared);
     // double r_squared = dot_product(basis[0], basis[0], N);
 
     // initialise variables with 0s and allocate necessary memory
