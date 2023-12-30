@@ -14,8 +14,11 @@ badBound: main.o gram_schmidt.o vector_math_functions.o svp_with_worse_bound.o
 noLLL: main.o gram_schmidt.o vector_math_functions.o svp_without_LLL.o
 	$(CC) -o noLLL main.o gram_schmidt.o vector_math_functions.o svp_without_LLL.o -lm $(CFLAGS)
 
-test: test.o svp.o vector_math_functions.o gram_schmidt.o
-	$(CC) -o test test.o svp.o gram_schmidt.o vector_math_functions.o -lm $(CFLAGS)
+test: test.o svp_only_LLL.o vector_math_functions.o gram_schmidt.o
+	$(CC) -o test test.o svp_only_LLL.o gram_schmidt.o vector_math_functions.o -lm $(CFLAGS)
+
+# test: test.o svp.o vector_math_functions.o gram_schmidt.o
+# 	$(CC) -o test test.o svp.o gram_schmidt.o vector_math_functions.o -lm $(CFLAGS)
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< -lm $(CFLAGS) 

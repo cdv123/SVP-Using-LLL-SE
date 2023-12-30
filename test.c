@@ -100,55 +100,81 @@ long double get_ans(char * string){
 
 int main(int argc, char* argv[]){
     
+    // FILE * fptr = fopen("test2.txt", "r");
+    // FILE * fptr2 = fopen("test_results.txt", "r");  
+
+    // int file_length = atoi(argv[1]);
+    // printf("%d\n", file_length);
+    // long double * results = malloc(sizeof(long double)*file_length);
+    // results[45] = 0;
+    // char myString[10000];
+    // int i = 0;
+
+    // while (fgets(myString, 10000, fptr)){
+    //     int N = get_dim(myString);
+    //     // printf("%d\n", N);
+    //     long double ** basis = decode_input(myString, N);
+    //     results[i] = svp(basis, N);
+    //     // results[i] = 0;
+    //     i++;
+    // }
+
+    // int index = 0;
+    // if (fptr2 == NULL){
+    //     printf("Error opening file");
+    // }
+    // while (fgets(myString, 10000, fptr2)){
+    //     if (index < file_length){
+    //         long double ans = get_ans(myString);
+    //         // printf("%Lf %Lf\n", ans, results[index]);
+    //         long double percen_diff = fabs(ans-results[index])/results[index];
+    //         results[index] = percen_diff;
+    //         index++;
+    //     }
+
+    // }
+
+    // fclose(fptr);
+    // fclose(fptr2);
+    
+
+    // FILE *file = fopen("accuracy_result.txt", "w");
+
+    // if (file == NULL){
+    //     perror("Error opening file");
+    //     return -1;
+
+    // }
+    // for (int j = 0; j < file_length; j++){
+    //     fprintf(file, "%Lf", results[j]);
+    //     fprintf(file, "\n");
+    // }
+    // free(results);
+    // fclose(file);
     FILE * fptr = fopen("test2.txt", "r");
-    FILE * fptr2 = fopen("test_results.txt", "r");  
+    FILE * file = fopen("dimensions.txt", "w");
 
     int file_length = atoi(argv[1]);
-    printf("%d\n", file_length);
-    long double * results = malloc(sizeof(long double)*file_length);
-    results[45] = 0;
+    int * dimensions = malloc(sizeof(int)*file_length);
+
     char myString[10000];
     int i = 0;
 
     while (fgets(myString, 10000, fptr)){
-        int N = get_dim(myString);
+        // int N = get_dim(myString);
+        dimensions[i] = get_dim(myString);
         // printf("%d\n", N);
-        long double ** basis = decode_input(myString, N);
-        results[i] = svp(basis, N);
+        // long double ** basis = decode_input(myString, N);
+        // results[i] = svp(basis, N);
         // results[i] = 0;
         i++;
     }
 
-    int index = 0;
-    if (fptr2 == NULL){
-        printf("Error opening file");
-    }
-    while (fgets(myString, 10000, fptr2)){
-        if (index < file_length){
-            long double ans = get_ans(myString);
-            // printf("%Lf %Lf\n", ans, results[index]);
-            long double percen_diff = fabs(ans-results[index])/results[index];
-            results[index] = percen_diff;
-            index++;
-        }
-
+    for (int j = 0; j < file_length; j++){
+        fprintf(file, "%d", dimensions[j]);
+        fprintf(file, "\n");
     }
 
     fclose(fptr);
-    fclose(fptr2);
-    
-
-    FILE *file = fopen("accuracy_result.txt", "w");
-
-    if (file == NULL){
-        perror("Error opening file");
-        return -1;
-
-    }
-    for (int j = 0; j < file_length; j++){
-        fprintf(file, "%Lf", results[j]);
-        fprintf(file, "\n");
-    }
-    free(results);
     fclose(file);
 }

@@ -27,7 +27,7 @@ void size_reduction(long double ** basis, long double ** gs_basis, long double *
             vector_sub(basis[k], temp, N);
             long double old_mu = mu[k][j];
             mu[k][j] = mu[k][j] - round(mu[k][j]);  
-            for (int i = 0; i < j ; i++){
+            for (int i = 0; i < j; i++){
                 mu[k][i] = mu[k][i] - (round(old_mu)*mu[j][i]);
             }
             free(temp);
@@ -38,7 +38,7 @@ void size_reduction(long double ** basis, long double ** gs_basis, long double *
             // free(mu);
             // free(gs_basis);
             // gs_info gram_schmidt_info = gram_schmidt(basis, N); 
-            // unpack gram schmidt info from gram schmidt structure
+            // // unpack gram schmidt info from gram schmidt structure
             // mu = gram_schmidt_info.mu;
             // gs_basis = gram_schmidt_info.gs_basis;
             
@@ -97,14 +97,30 @@ long double svp(long double ** basis, int N){
 
     // gs_info gram_schmidt_info = gram_schmidt(basis, N);
     gs_info gram_schmidt_info = LLL(basis, N);
-
-    if (1){
-        return sqrt(dot_product(basis[0], basis[0], N));
-    }
-
     // unpack gram schmidt info from gram schmidt structure
     long double ** mu = gram_schmidt_info.mu;
     long double ** gs_basis = gram_schmidt_info.gs_basis;
+
+    if (1){
+        long double ans = sqrt(dot_product(basis[0], basis[0], N));
+        long double temp;
+        for (int i = 0; i < N; i++){
+            temp = sqrt(dot_product(basis[i], basis[i], N));
+            if (temp < ans){
+                ans = temp;
+            }
+        }
+        for (int i = 0; i < N; i++){
+            free(mu[i]);
+            free(gs_basis[i]);
+            free(basis[i]);
+            }
+        free(mu);
+        free(gs_basis);                
+        free(basis);
+        return ans;
+    }
+
 
     // get search area (upper bound where solution can be found)
     long double r_squared = get_search_area(gs_basis, N);
@@ -160,8 +176,8 @@ long double svp(long double ** basis, int N){
                     free(basis[i]);
                 }
                 free(mu);
-                free(basis);
                 free(gs_basis);
+                free(basis);
                 return sqrt(r_squared);
             }
             else {

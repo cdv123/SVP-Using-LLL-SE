@@ -97,6 +97,12 @@ long double svp(long double ** basis, int N){
 
     // gs_info gram_schmidt_info = gram_schmidt(basis, N);
     gs_info gram_schmidt_info = LLL(basis, N);
+    for (int i = 0; i < N; i++){
+        for (int j = 0; j < N; j++){
+            printf("%Lf ", basis[i][j]);
+        }
+        printf("\n");
+    }
     // unpack gram schmidt info from gram schmidt structure
     long double ** mu = gram_schmidt_info.mu;
     long double ** gs_basis = gram_schmidt_info.gs_basis;

@@ -64,7 +64,6 @@ int main(int argc, char *argv[]) {
     long double ans;
 
     ans = svp(basis, N);
-    // print_2d_arr(basis, N);
     // for (int i = 0; i < N; i++){ 
     //     printf("%Lf\n", sqrt(dot_product(basis[i], basis[i], N)));
     // }
