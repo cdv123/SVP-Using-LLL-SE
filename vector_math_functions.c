@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-// function which takes in two arrays of doubles and outputs the dot product between them
-double dot_product(double * x, double * y, int N){
+// function which takes in two arrays of long doubles and outputs the dot product between them
+long double dot_product(long double * x, long double * y, int N){
 
-    double res = 0;
+    long double res = 0;
 
     for (int i = 0; i < N; i++){
         res+= x[i] * y[i];
@@ -15,7 +15,7 @@ double dot_product(double * x, double * y, int N){
 }
 
 // function to return array multiplied by scalar product, can be in place or not
-double* scalar_product(double *x, double scalar, int N, int in_place){
+long double* scalar_product(long double *x, long double scalar, int N, int in_place){
 
     if (in_place){
         for (int i = 0; i < N; i++){
@@ -26,7 +26,7 @@ double* scalar_product(double *x, double scalar, int N, int in_place){
     }
 
     else{
-        double *y = malloc(sizeof(double)*N);
+        long double *y = malloc(sizeof(long double)*N);
         for (int i = 0; i < N; i++){
             y[i] = x[i] * scalar;
         }
@@ -36,12 +36,12 @@ double* scalar_product(double *x, double scalar, int N, int in_place){
 
 }
 
-double square(double x){
+long double square(long double x){
     return (x * x);
 }
 
 // subtract v2 from v1 in place
-void vector_sub(double * v1, double * v2, int N){
+void vector_sub(long double * v1, long double * v2, int N){
     for (int i = 0; i < N; i++){
         v1[i] = v1[i] - v2[i];
     }

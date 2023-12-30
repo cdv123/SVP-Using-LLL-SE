@@ -6,8 +6,9 @@
 
 // get nummber of dimensions from input
 int get_dim(char * string){
+    // printf("%s\n", string);
     int length = strlen(string);
-    int N = -1;
+    int N = 0;
     for (int i = 0; i < length; i++){
         if (string[i] == '['){
             N++;
@@ -16,25 +17,25 @@ int get_dim(char * string){
     return N;
 }
 
-// void print_2d_arr(double ** arr, int N){
-//     for (int i = 0; i < N; i++){
-//         for (int j = 0; j < N; j++){
-//             printf("%f ", arr[i][j]);
-//         }
-//         printf("\n");
-//     }
-// }
+void print_2d_arr(long double ** arr, int N){
+    for (int i = 0; i < N; i++){
+        for (int j = 0; j < N; j++){
+            printf("%Lf ", arr[i][j]);
+        }
+        printf("\n");
+    }
+}
 
-double ** decode_input(char * string, int N){
+long double ** decode_input(char * string, int N){
 
     int length = strlen(string);
-    double ** basis = malloc(sizeof(double)*N);
-    int i = 1;
+    long double ** basis = malloc(sizeof(long double)*N);
+    int i = 0;
     int index = 0;
+    int j = 0;
     while (i < length){
         if (string[i] == '['){
-            basis[index] = malloc(sizeof(double)*N); 
-            int j = 0;
+            basis[index] = malloc(sizeof(long double)*N); 
             basis[index][j] = strtod(string+i+1, NULL);
             j++;
             while (i < length && (string[i] != ' ' && string[i] != ']')){
@@ -51,6 +52,7 @@ double ** decode_input(char * string, int N){
                 }
             }
             index++;
+            j = 0;
         }
         i++;
     }
@@ -59,7 +61,7 @@ double ** decode_input(char * string, int N){
     return basis;
 }
 
-double get_ans(char * string){
+long double get_ans(char * string){
 
     int length = strlen(string);
     int N = 1;
@@ -69,61 +71,64 @@ double get_ans(char * string){
             N++;
         }
     }
-
-    double * vector = malloc(N*sizeof(double));
+    long double * vector = malloc(sizeof(long double)*N);
 
     int i = 1;
     int index = 0;
-    vector[0] = strtod(string+1, NULL);
+    vector[index] = strtod(string+i, NULL);
     index++;
-    while (i < length -1){
-        while (i < length-1 && string[i] != ' ' && string[i] != '['){
+    while (i < length- 1){
+        while (i < length-1 && string[i] != ' ' && string[i] != ']'){
             i++;
         }
-        vector[index] = strtod(string+i+1, NULL);
+        if (index == N){
+            break;
+        }
+        vector[index] = strtod(string+i, NULL);
         index++;
         i++;
     }
-
-    double ans = 0;
-    for (int i = 0; i < N; i++){
-        // printf("%f\n", vector[i]);
-        ans+= (vector[i]*vector[i]);
+    long double ans = 0;
+    for (int j = 0; j < N; j++){
+        ans+= (vector[j]*vector[j]);
     }
-    // printf("%f\n", ans);
+    free(vector);
     return sqrt(ans);
+
 
 }
 
-int main(){
+int main(int argc, char* argv[]){
     
-    FILE * fptr = fopen("tests.txt", "r");
+    FILE * fptr = fopen("test2.txt", "r");
     FILE * fptr2 = fopen("test_results.txt", "r");  
-    double results[7];
+
+    int file_length = atoi(argv[1]);
+    printf("%d\n", file_length);
+    long double * results = malloc(sizeof(long double)*file_length);
+    results[45] = 0;
     char myString[10000];
     int i = 0;
 
     while (fgets(myString, 10000, fptr)){
         int N = get_dim(myString);
-        if (N > 0){
-            double ** basis = decode_input(myString, N);
-            results[i] = svp(basis, N);
-            i++;
-            // free(basis);
-        }
+        // printf("%d\n", N);
+        long double ** basis = decode_input(myString, N);
+        results[i] = svp(basis, N);
+        // results[i] = 0;
+        i++;
     }
 
-
     int index = 0;
-    // if (fptr2 == NULL){
-    //     printf("h");
-    // }
+    if (fptr2 == NULL){
+        printf("Error opening file");
+    }
     while (fgets(myString, 10000, fptr2)){
-        if (index < i){
-            double ans = get_ans(myString);
-            double percen_diff = fabs(ans-results[index])/results[index];
-            printf("%f %f\n", ans, results[index]);
-            printf("%f\n", percen_diff);
+        if (index < file_length){
+            long double ans = get_ans(myString);
+            // printf("%Lf %Lf\n", ans, results[index]);
+            long double percen_diff = fabs(ans-results[index])/results[index];
+            results[index] = percen_diff;
             index++;
         }
 
@@ -131,4 +136,19 @@ int main(){
 
     fclose(fptr);
     fclose(fptr2);
+    
+
+    FILE *file = fopen("accuracy_result.txt", "w");
+
+    if (file == NULL){
+        perror("Error opening file");
+        return -1;
+
+    }
+    for (int j = 0; j < file_length; j++){
+        fprintf(file, "%Lf", results[j]);
+        fprintf(file, "\n");
+    }
+    free(results);
+    fclose(file);
 }
