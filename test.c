@@ -17,7 +17,7 @@ int get_dim(char * string){
     return N;
 }
 
-void print_2d_arr(long double ** arr, int N){
+void print_2d_arr(double ** arr, int N){
     for (int i = 0; i < N; i++){
         for (int j = 0; j < N; j++){
             printf("%Lf ", arr[i][j]);
@@ -26,16 +26,16 @@ void print_2d_arr(long double ** arr, int N){
     }
 }
 
-long double ** decode_input(char * string, int N){
+double ** decode_input(char * string, int N){
 
     int length = strlen(string);
-    long double ** basis = malloc(sizeof(long double)*N);
+    double ** basis = malloc(sizeof(double)*N);
     int i = 0;
     int index = 0;
     int j = 0;
     while (i < length){
         if (string[i] == '['){
-            basis[index] = malloc(sizeof(long double)*N); 
+            basis[index] = malloc(sizeof(double)*N); 
             basis[index][j] = strtod(string+i+1, NULL);
             j++;
             while (i < length && (string[i] != ' ' && string[i] != ']')){
@@ -61,7 +61,7 @@ long double ** decode_input(char * string, int N){
     return basis;
 }
 
-long double get_ans(char * string){
+double get_ans(char * string){
 
     int length = strlen(string);
     int N = 1;
@@ -71,7 +71,7 @@ long double get_ans(char * string){
             N++;
         }
     }
-    long double * vector = malloc(sizeof(long double)*N);
+    double * vector = malloc(sizeof(double)*N);
 
     int i = 1;
     int index = 0;
@@ -88,7 +88,7 @@ long double get_ans(char * string){
         index++;
         i++;
     }
-    long double ans = 0;
+    double ans = 0;
     for (int j = 0; j < N; j++){
         ans+= (vector[j]*vector[j]);
     }
@@ -105,7 +105,7 @@ int main(int argc, char* argv[]){
 
     // int file_length = atoi(argv[1]);
     // printf("%d\n", file_length);
-    // long double * results = malloc(sizeof(long double)*file_length);
+    // double * results = malloc(sizeof(double)*file_length);
     // results[45] = 0;
     // char myString[10000];
     // int i = 0;
@@ -113,7 +113,7 @@ int main(int argc, char* argv[]){
     // while (fgets(myString, 10000, fptr)){
     //     int N = get_dim(myString);
     //     // printf("%d\n", N);
-    //     long double ** basis = decode_input(myString, N);
+    //     double ** basis = decode_input(myString, N);
     //     results[i] = svp(basis, N);
     //     // results[i] = 0;
     //     i++;
@@ -125,9 +125,9 @@ int main(int argc, char* argv[]){
     // }
     // while (fgets(myString, 10000, fptr2)){
     //     if (index < file_length){
-    //         long double ans = get_ans(myString);
+    //         double ans = get_ans(myString);
     //         // printf("%Lf %Lf\n", ans, results[index]);
-    //         long double percen_diff = fabs(ans-results[index])/results[index];
+    //         double percen_diff = fabs(ans-results[index])/results[index];
     //         results[index] = percen_diff;
     //         index++;
     //     }
@@ -151,20 +151,20 @@ int main(int argc, char* argv[]){
     // }
     // free(results);
     // fclose(file);
-    FILE * fptr = fopen("test2.txt", "r");
-    FILE * file = fopen("dimensions.txt", "w");
+    FILE * fptr = fopen("new_test2.txt", "r");
+    FILE * file = fopen("dimensions2.txt", "w");
 
     int file_length = atoi(argv[1]);
     int * dimensions = malloc(sizeof(int)*file_length);
 
-    char myString[10000];
+    char myString[100000];
     int i = 0;
 
-    while (fgets(myString, 10000, fptr)){
+    while (fgets(myString, 100000, fptr)){
         // int N = get_dim(myString);
         dimensions[i] = get_dim(myString);
         // printf("%d\n", N);
-        // long double ** basis = decode_input(myString, N);
+        // double ** basis = decode_input(myString, N);
         // results[i] = svp(basis, N);
         // results[i] = 0;
         i++;

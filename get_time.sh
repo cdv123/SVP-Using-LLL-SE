@@ -3,5 +3,8 @@ echo "" > out
 file_name=$1
 while read -r line
 do
-    hyperfine --runs 5 "./runme $line" "./lll $line" "./noLLL $line" "./badBound $line" >> out
+    hyperfine "./lll $line" >> out
+    hyperfine "./noLLL $line" >> out
+    hyperfine "./badBound $line" >> out
+    hyperfine "./runme $line" >> out
 done < $file_name

@@ -1,4 +1,4 @@
-CC = gcc
+CC = gcc -Ofast -pg
 CFLAGS = -I.
 DEPS = vector_math_functions.h gram_schmidt.h svp.h
 

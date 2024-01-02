@@ -3,63 +3,51 @@
 #include <stdio.h>
 #include "svp.h"
 #include "vector_math_functions.h"
-
+#define square(a) ((a)*(a))
 
 // function to get a lower bound on the norm of the shortest vector
-long double get_search_area(long double ** basis, int N){
-    long double gamma_n = ((long double)N)/4.0 + 1.0;
+double get_search_area(double ** basis, int N){
+    double gamma_n = ((double)N)/4.0 + 1.0;
     gamma_n = sqrt(gamma_n);
-    long double vol_l = 1;
+    double vol_l = 1;
     for (int i = 0; i< N; i++){
         vol_l = vol_l * sqrt(dot_product(basis[i], basis[i], N));
     }
-    vol_l = pow(vol_l, (long double)1/(long double)N);
-    long double temp = gamma_n*vol_l;
+    vol_l = pow(vol_l, (double)1/(double)N);
+    double temp = gamma_n*vol_l;
     return square(gamma_n*vol_l);
 
 }
 
 // size reduce for LLL
-void size_reduction(long double ** basis, long double ** gs_basis, long double ** mu, int k, int N) {
+void size_reduction(double ** basis, double ** gs_basis, double ** mu, int k, int N) {
     for (int j = k-1; j >= 0; j --){
         if (fabs(mu[k][j]) > 0.5){
-            long double * temp = scalar_product(basis[j], round(mu[k][j]), N, 0);
+            double * temp = scalar_product(basis[j], round(mu[k][j]), N, 0);
             vector_sub(basis[k], temp, N);
-            long double old_mu = mu[k][j];
+            double old_mu = mu[k][j];
             mu[k][j] = mu[k][j] - round(mu[k][j]);  
             for (int i = 0; i < j; i++){
                 mu[k][i] = mu[k][i] - (round(old_mu)*mu[j][i]);
             }
             free(temp);
-            // for (int i = 0; i < N; i++){
-            //     free(mu[i]);
-            //     free(gs_basis[i]);
-            // }
-            // free(mu);
-            // free(gs_basis);
-            // gs_info gram_schmidt_info = gram_schmidt(basis, N); 
-            // // unpack gram schmidt info from gram schmidt structure
-            // mu = gram_schmidt_info.mu;
-            // gs_basis = gram_schmidt_info.gs_basis;
-            
-            // print_1d_arr(basis, N);
         }
     }
     // print_2d_arr(mu, N);
     // print_2d_arr(basis, N);
 }
 
-gs_info LLL(long double ** basis, int N) {
+gs_info LLL(double ** basis, int N) {
 
     gs_info gram_schmidt_info;
 
     gram_schmidt_info = gram_schmidt(basis, N); 
 
     // unpack gram schmidt info from gram schmidt structure
-    long double ** mu = gram_schmidt_info.mu;
-    long double ** gs_basis = gram_schmidt_info.gs_basis;
+    double ** mu = gram_schmidt_info.mu;
+    double ** gs_basis = gram_schmidt_info.gs_basis;
 
-    long double delta = 0.75;
+    double delta = 0.75;
     int k = 1;
     while (k < N) {
         size_reduction(basis, gs_basis, mu, k, N);
@@ -93,23 +81,17 @@ gs_info LLL(long double ** basis, int N) {
 }
 
 // function to solve svp given the basis vectors
-long double svp(long double ** basis, int N){
+double svp(double ** basis, int N){
 
     // gs_info gram_schmidt_info = gram_schmidt(basis, N);
     gs_info gram_schmidt_info = LLL(basis, N);
-    for (int i = 0; i < N; i++){
-        for (int j = 0; j < N; j++){
-            printf("%Lf ", basis[i][j]);
-        }
-        printf("\n");
-    }
     // unpack gram schmidt info from gram schmidt structure
-    long double ** mu = gram_schmidt_info.mu;
-    long double ** gs_basis = gram_schmidt_info.gs_basis;
+    double ** mu = gram_schmidt_info.mu;
+    double ** gs_basis = gram_schmidt_info.gs_basis;
 
     if (N < 5){
-        long double ans = sqrt(dot_product(basis[0], basis[0], N));
-        long double temp;
+        double ans = sqrt(dot_product(basis[0], basis[0], N));
+        double temp;
         for (int i = 0; i < N; i++){
             temp = sqrt(dot_product(basis[i], basis[i], N));
             if (temp < ans){
@@ -129,14 +111,14 @@ long double svp(long double ** basis, int N){
 
 
     // get search area (upper bound where solution can be found)
-    long double r_squared = get_search_area(gs_basis, N);
-    // long double r_squared = dot_product(basis[0], basis[0], N);
+    double r_squared = get_search_area(gs_basis, N);
+    // double r_squared = dot_product(basis[0], basis[0], N);
 
     // initialise variables with 0s and allocate necessary memory
-    long double *p = calloc(sizeof(long double), N+1);
-    long double *v = calloc(sizeof(long double), N);
-    long double *c = calloc(sizeof(long double), N);
-    long double *w = calloc(sizeof(long double), N);
+    double *p = calloc(sizeof(double), N+1);
+    int *v = calloc(sizeof(int), N);
+    double *c = calloc(sizeof(double), N);
+    double *w = calloc(sizeof(double), N);
     v[0] = 1;
     int k = 0;
 
@@ -208,13 +190,13 @@ long double svp(long double ** basis, int N){
     }
 }
 
-void swap(long double * a, long double * b){
-    long double temp = *a;
+void swap(double * a, double * b){
+    double temp = *a;
     *a = *b;
     *b = temp;
 }
 
-void swap_arr(long double * l1, long double * l2, int N){
+void swap_arr(double * l1, double * l2, int N){
     for (int i = 0; i < N; i++){
         swap(&l1[i], &l2[i]);
     }

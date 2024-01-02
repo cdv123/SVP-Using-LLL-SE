@@ -1,6 +1,6 @@
 typedef struct return_schmidt {
-    long double ** mu;
-    long double ** gs_basis;
+    double ** mu;
+    double ** gs_basis;
 } gs_info;
 
-gs_info gram_schmidt(long double ** basis, int N);
+gs_info gram_schmidt(double ** basis, int N);
