@@ -2,9 +2,9 @@
 
 double get_search_area(double ** basis, int N);
 
-void size_reduction(double ** basis, double ** gs_basis, double ** mu, int k, int N);
+void size_reduction(double ** basis, double ** mu, int k, int N, double * temp);
 
-gs_info LLL(double ** basis, int N);
+void LLL(double ** basis, int N, gs_info gram_schmidt_info);
 
 double svp(double ** basis, int N);
 

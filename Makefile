@@ -1,4 +1,4 @@
-CC = gcc -Ofast -pg
+CC = gcc -O3
 CFLAGS = -I.
 DEPS = vector_math_functions.h gram_schmidt.h svp.h
 
@@ -24,4 +24,4 @@ test: test.o svp_only_LLL.o vector_math_functions.o gram_schmidt.o
 	$(CC) -c -o $@ $< -lm $(CFLAGS) 
 
 clean:
-	rm -rf test runme *.o
+	rm -rf test runme noLLL lll *.o

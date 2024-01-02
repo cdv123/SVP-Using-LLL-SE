@@ -3,4 +3,4 @@ typedef struct return_schmidt {
     double ** gs_basis;
 } gs_info;
 
-gs_info gram_schmidt(double ** basis, int N);
+void gram_schmidt(double ** basis, int N, gs_info gram_schmidt_info);

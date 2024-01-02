@@ -6,7 +6,6 @@
 #include "vector_math_functions.h"
 
 
-
 void print_1d_arr(double * arr, int N){
     for (int i = 0; i < N; i++){
         printf("%f ", arr[i]);
@@ -14,6 +13,7 @@ void print_1d_arr(double * arr, int N){
     printf("\n");
 }
 
+// function to read the input and get the number of dimensions
 int get_n(int argc, char* argv[]){
     int char_num = 0;
     int arg_num = 0;
@@ -29,6 +29,8 @@ int get_n(int argc, char* argv[]){
     }
     return N;
 }
+
+// given the number of dimensions, this function puts the input into a 2d array called basis
 void read_input(double ** basis, int argc, char* argv[], int N){
     int index = 0;
     int extra = 0;
@@ -57,16 +59,20 @@ void print_2d_arr(double ** arr, int N){
 }
 
 int main(int argc, char *argv[]) {
-    int N = get_n(argc-1, argv+1);
-    double ** basis = malloc(N*sizeof(double));
-    read_input(basis, argc-1, argv+1, N);
-    // print_2d_arr(basis, N);
-    double ans;
 
+    // get the numebr of dimensions
+    int N = get_n(argc-1, argv+1);
+
+    // allocate required memory for 2d array
+    double ** basis = malloc(N*sizeof(double));
+
+    // put values from input into 2d array
+    read_input(basis, argc-1, argv+1, N);
+
+    double ans;
     ans = svp(basis, N);
-    // for (int i = 0; i < N; i++){ 
-    //     printf("%f\n", sqrt(dot_product(basis[i], basis[i], N)));
-    // }
+
+    // open file in write mode
     FILE *file = fopen("result.txt", "w");
 
     if (file == NULL){
@@ -74,7 +80,10 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    // output result to file
     fprintf(file, "%f", ans);
+
+    // close file
     fclose(file);
     
     return 0;

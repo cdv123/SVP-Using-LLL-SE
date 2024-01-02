@@ -2,16 +2,16 @@ Flat profile:
 
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
- time   seconds   seconds    calls   s/call   s/call  name    
- 52.89      0.64     0.64        1     0.64     1.21  svp
- 46.28      1.20     0.56 39228148     0.00     0.00  dot_product
-  0.83      1.21     0.01      473     0.00     0.00  gram_schmidt
-  0.00      1.21     0.00     2095     0.00     0.00  scalar_product
-  0.00      1.21     0.00     2095     0.00     0.00  vector_sub
-  0.00      1.21     0.00      960     0.00     0.00  size_reduction
-  0.00      1.21     0.00        1     0.00     0.02  LLL
-  0.00      1.21     0.00        1     0.00     0.00  get_n
-  0.00      1.21     0.00        1     0.00     0.00  read_input
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 75.00      0.06     0.06  2097634     0.00     0.00  dot_product
+ 12.50      0.07     0.01        1    10.00    36.06  svp
+ 12.50      0.08     0.01                             gram_schmidt
+  0.00      0.08     0.00     1522     0.00     0.00  scalar_product
+  0.00      0.08     0.00     1522     0.00     0.00  vector_sub
+  0.00      0.08     0.00     1094     0.00     0.00  size_reduction
+  0.00      0.08     0.00        1     0.00     0.06  LLL
+  0.00      0.08     0.00        1     0.00     0.00  get_n
+  0.00      0.08     0.00        1     0.00     0.00  read_input
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -49,50 +49,49 @@ notice and this notice are preserved.
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 4 byte(s) for 0.83% of 1.21 seconds
+granularity: each sample hit covers 4 byte(s) for 12.50% of 0.08 seconds
 
 index % time    self  children    called     name
-                0.64    0.57       1/1           main [2]
-[1]    100.0    0.64    0.57       1         svp [1]
-                0.55    0.00 38488348/39228148     dot_product [3]
-                0.00    0.02       1/1           LLL [4]
+                0.00    0.00    2188/2097634     LLL [5]
+                0.03    0.00  908790/2097634     svp [3]
+                0.03    0.00 1186656/2097634     gram_schmidt [2]
+[1]     75.0    0.06    0.00 2097634         dot_product [1]
 -----------------------------------------------
                                                  <spontaneous>
-[2]    100.0    0.00    1.21                 main [2]
-                0.64    0.57       1/1           svp [1]
+[2]     54.9    0.01    0.03                 gram_schmidt [2]
+                0.03    0.00 1186656/2097634     dot_product [1]
+-----------------------------------------------
+                0.01    0.03       1/1           main [4]
+[3]     45.1    0.01    0.03       1         svp [3]
+                0.03    0.00  908790/2097634     dot_product [1]
+                0.00    0.00       1/1           LLL [5]
+-----------------------------------------------
+                                                 <spontaneous>
+[4]     45.1    0.00    0.04                 main [4]
+                0.01    0.03       1/1           svp [3]
                 0.00    0.00       1/1           get_n [9]
                 0.00    0.00       1/1           read_input [10]
 -----------------------------------------------
-                0.00    0.00    1920/39228148     LLL [4]
-                0.01    0.00  737880/39228148     gram_schmidt [5]
-                0.55    0.00 38488348/39228148     svp [1]
-[3]     46.3    0.56    0.00 39228148         dot_product [3]
+                0.00    0.00       1/1           svp [3]
+[5]      0.1    0.00    0.00       1         LLL [5]
+                0.00    0.00    2188/2097634     dot_product [1]
+                0.00    0.00    1094/1094        size_reduction [8]
 -----------------------------------------------
-                0.00    0.02       1/1           svp [1]
-[4]      1.7    0.00    0.02       1         LLL [4]
-                0.01    0.01     473/473         gram_schmidt [5]
-                0.00    0.00    1920/39228148     dot_product [3]
-                0.00    0.00     960/960         size_reduction [8]
+                0.00    0.00    1522/1522        size_reduction [8]
+[6]      0.0    0.00    0.00    1522         scalar_product [6]
 -----------------------------------------------
-                0.01    0.01     473/473         LLL [4]
-[5]      1.7    0.01    0.01     473         gram_schmidt [5]
-                0.01    0.00  737880/39228148     dot_product [3]
+                0.00    0.00    1522/1522        size_reduction [8]
+[7]      0.0    0.00    0.00    1522         vector_sub [7]
 -----------------------------------------------
-                0.00    0.00    2095/2095        size_reduction [8]
-[6]      0.0    0.00    0.00    2095         scalar_product [6]
+                0.00    0.00    1094/1094        LLL [5]
+[8]      0.0    0.00    0.00    1094         size_reduction [8]
+                0.00    0.00    1522/1522        scalar_product [6]
+                0.00    0.00    1522/1522        vector_sub [7]
 -----------------------------------------------
-                0.00    0.00    2095/2095        size_reduction [8]
-[7]      0.0    0.00    0.00    2095         vector_sub [7]
------------------------------------------------
-                0.00    0.00     960/960         LLL [4]
-[8]      0.0    0.00    0.00     960         size_reduction [8]
-                0.00    0.00    2095/2095        scalar_product [6]
-                0.00    0.00    2095/2095        vector_sub [7]
------------------------------------------------
-                0.00    0.00       1/1           main [2]
+                0.00    0.00       1/1           main [4]
 [9]      0.0    0.00    0.00       1         get_n [9]
 -----------------------------------------------
-                0.00    0.00       1/1           main [2]
+                0.00    0.00       1/1           main [4]
 [10]     0.0    0.00    0.00       1         read_input [10]
 -----------------------------------------------
 
@@ -186,6 +185,6 @@ notice and this notice are preserved.
 
 Index by function name
 
-   [4] LLL                     [5] gram_schmidt            [8] size_reduction
-   [3] dot_product            [10] read_input              [1] svp
+   [5] LLL                     [2] gram_schmidt            [8] size_reduction
+   [1] dot_product            [10] read_input              [3] svp
    [9] get_n                   [6] scalar_product          [7] vector_sub

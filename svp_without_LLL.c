@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "svp.h"
 #include "vector_math_functions.h"
-
+#define square(a) ((a)*(a))
 
 // function to get a lower bound on the norm of the shortest vector
 double get_search_area(double ** basis, int N){
@@ -16,53 +16,37 @@ double get_search_area(double ** basis, int N){
     vol_l = pow(vol_l, (double)1/(double)N);
     double temp = gamma_n*vol_l;
     return square(gamma_n*vol_l);
-
 }
 
 // size reduce for LLL
-void size_reduction(double ** basis, double ** gs_basis, double ** mu, int k, int N) {
+void size_reduction(double ** basis, double ** mu, int k, int N, double * temp) {
     for (int j = k-1; j >= 0; j --){
         if (fabs(mu[k][j]) > 0.5){
-            double * temp = scalar_product(basis[j], round(mu[k][j]), N, 0);
+            scalar_product(basis[j], round(mu[k][j]), N, temp);
             vector_sub(basis[k], temp, N);
             double old_mu = mu[k][j];
             mu[k][j] = mu[k][j] - round(mu[k][j]);  
             for (int i = 0; i < j; i++){
                 mu[k][i] = mu[k][i] - (round(old_mu)*mu[j][i]);
             }
-            free(temp);
-            // for (int i = 0; i < N; i++){
-            //     free(mu[i]);
-            //     free(gs_basis[i]);
-            // }
-            // free(mu);
-            // free(gs_basis);
-            // gs_info gram_schmidt_info = gram_schmidt(basis, N); 
-            // // unpack gram schmidt info from gram schmidt structure
-            // mu = gram_schmidt_info.mu;
-            // gs_basis = gram_schmidt_info.gs_basis;
-            
-            // print_1d_arr(basis, N);
         }
     }
     // print_2d_arr(mu, N);
     // print_2d_arr(basis, N);
 }
 
-gs_info LLL(double ** basis, int N) {
+void LLL(double ** basis, int N, gs_info gram_schmidt_info) {
 
-    gs_info gram_schmidt_info;
-
-    gram_schmidt_info = gram_schmidt(basis, N); 
-
+    gram_schmidt(basis, N, gram_schmidt_info); 
+    double * temp = malloc(sizeof(double)*N);
     // unpack gram schmidt info from gram schmidt structure
     double ** mu = gram_schmidt_info.mu;
     double ** gs_basis = gram_schmidt_info.gs_basis;
 
-    double delta = 0.75;
+    double delta = 0.99;
     int k = 1;
     while (k < N) {
-        size_reduction(basis, gs_basis, mu, k, N);
+        size_reduction(basis, mu, k, N, temp);
         // printf("%Lf ", dot_product(gs_basis[k], gs_basis[k], N));
         // printf("%Lf \n", (delta - square(mu[k][k-1])) * (dot_product(gs_basis[k-1], gs_basis[k-1], N)));
         if (dot_product(gs_basis[k], gs_basis[k], N) > ((delta - square(mu[k][k-1]))*(dot_product(gs_basis[k-1], gs_basis[k-1], N)))){
@@ -70,13 +54,7 @@ gs_info LLL(double ** basis, int N) {
         }
         else{
             swap_arr(basis[k], basis[k-1], N);
-            for (int i = 0; i < N; i++){
-                free(mu[i]);
-                free(gs_basis[i]);
-            }
-            free(mu);
-            free(gs_basis);
-            gram_schmidt_info = gram_schmidt(basis, N); 
+            gram_schmidt(basis, N, gram_schmidt_info); 
             // unpack gram schmidt info from gram schmidt structure
             mu = gram_schmidt_info.mu;
             gs_basis = gram_schmidt_info.gs_basis;
@@ -89,37 +67,45 @@ gs_info LLL(double ** basis, int N) {
         }
     }
 
-    return gram_schmidt_info;
+    free(temp);
+
 }
 
 // function to solve svp given the basis vectors
 double svp(double ** basis, int N){
 
-    gs_info gram_schmidt_info = gram_schmidt(basis, N);
-    // gs_info gram_schmidt_info = LLL(basis, N);
+    gs_info gram_schmidt_info = {malloc(sizeof(double)*N), malloc(sizeof(double)*N)};
+
+    // define mu and gs_basis to have N arrays of size N and allocate necessary memory
+    for (int i = 0; i < N; i++){
+        gram_schmidt_info.mu[i] = malloc(sizeof(double)*N);
+        gram_schmidt_info.gs_basis[i] = malloc(sizeof(double)*N);
+    }
+    gram_schmidt(basis, N, gram_schmidt_info);
+    // LLL(basis, N, gram_schmidt_info);
     // unpack gram schmidt info from gram schmidt structure
     double ** mu = gram_schmidt_info.mu;
     double ** gs_basis = gram_schmidt_info.gs_basis;
 
-    // if (N < 5){
-    //     double ans = sqrt(dot_product(basis[0], basis[0], N));
-    //     double temp;
-    //     for (int i = 0; i < N; i++){
-    //         temp = sqrt(dot_product(basis[i], basis[i], N));
-    //         if (temp < ans){
-    //             ans = temp;
-    //         }
-    //     }
-    //     for (int i = 0; i < N; i++){
-    //         free(mu[i]);
-    //         free(gs_basis[i]);
-    //         free(basis[i]);
-    //         }
-    //     free(mu);
-    //     free(gs_basis);                
-    //     free(basis);
-    //     return ans;
-    // }
+    if (N < 5){
+        double ans = sqrt(dot_product(basis[0], basis[0], N));
+        double temp;
+        for (int i = 0; i < N; i++){
+            temp = sqrt(dot_product(basis[i], basis[i], N));
+            if (temp < ans){
+                ans = temp;
+            }
+        }
+        for (int i = 0; i < N; i++){
+            free(mu[i]);
+            free(gs_basis[i]);
+            free(basis[i]);
+            }
+        free(mu);
+        free(gs_basis);                
+        free(basis);
+        return ans;
+    }
 
 
     // get search area (upper bound where solution can be found)
@@ -128,7 +114,7 @@ double svp(double ** basis, int N){
 
     // initialise variables with 0s and allocate necessary memory
     double *p = calloc(sizeof(double), N+1);
-    double *v = calloc(sizeof(double), N);
+    int *v = calloc(sizeof(int), N);
     double *c = calloc(sizeof(double), N);
     double *w = calloc(sizeof(double), N);
     v[0] = 1;

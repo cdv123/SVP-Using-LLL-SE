@@ -4,19 +4,10 @@
 #include <math.h>
 
 // Function to get Gram Schmidt information from set of basis vectors
-gs_info gram_schmidt(double ** basis, int N){
-
-    // initialise new basis and allocate necessary memory
-    double ** gs_basis = malloc(sizeof(double*)*N);
-
-    // initialise the gram schmidt coefficients and allocate necessary memory
-    double ** mu = malloc(sizeof(double)*N);
+void gram_schmidt(double ** basis, int N, gs_info gram_schmidt_info){
     
-    // define mu and gs_basis to have N arrays of size N and allocate necessary memory
-    for (int i = 0; i < N; i++){
-        mu[i] = malloc(sizeof(double)*N);
-        gs_basis[i] = malloc(sizeof(double)*N);
-    }
+    double ** gs_basis = gram_schmidt_info.gs_basis;
+    double ** mu = gram_schmidt_info.mu;
 
     // main loop for gram schmidt
     for (int i = 0; i < N; i++){
@@ -45,9 +36,4 @@ gs_info gram_schmidt(double ** basis, int N){
         mu[i][i] = 1;
     }
 
-
-    // define structure to return both structures
-    gs_info return_val = {mu, gs_basis};
-
-    return return_val;
 }

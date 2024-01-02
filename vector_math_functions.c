@@ -16,25 +16,10 @@ double dot_product(double * x, double * y, int N){
 }
 
 // function to return array multiplied by scalar product, can be in place or not
-double* scalar_product(double *x, double scalar, int N, int in_place){
-
-    if (in_place){
-        for (int i = 0; i < N; i++){
-            x[i] = x[i] * scalar;
-        }
-
-        return x;
+void scalar_product(double *x, double scalar, int N, double * save_to){
+    for (int i = 0; i < N; i++){
+        save_to[i] = x[i] * scalar;
     }
-
-    else{
-        double *y = malloc(sizeof(double)*N);
-        for (int i = 0; i < N; i++){
-            y[i] = x[i] * scalar;
-        }
-
-        return y;
-    }
-
 }
 
 // subtract v2 from v1 in place
