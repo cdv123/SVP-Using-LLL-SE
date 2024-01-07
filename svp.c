@@ -31,8 +31,6 @@ void size_reduction(double ** basis, double ** mu, int k, int N, double * temp) 
             }
         }
     }
-    // print_2d_arr(mu, N);
-    // print_2d_arr(basis, N);
 }
 
 void LLL(double ** basis, int N, gs_info gram_schmidt_info) {
@@ -47,8 +45,6 @@ void LLL(double ** basis, int N, gs_info gram_schmidt_info) {
     int k = 1;
     while (k < N) {
         size_reduction(basis, mu, k, N, temp);
-        // printf("%Lf ", dot_product(gs_basis[k], gs_basis[k], N));
-        // printf("%Lf \n", (delta - square(mu[k][k-1])) * (dot_product(gs_basis[k-1], gs_basis[k-1], N)));
         if (dot_product(gs_basis[k], gs_basis[k], N) > ((delta - square(mu[k][k-1]))*(dot_product(gs_basis[k-1], gs_basis[k-1], N)))){
             k+=1;
         }
@@ -87,25 +83,25 @@ double svp(double ** basis, int N){
     double ** mu = gram_schmidt_info.mu;
     double ** gs_basis = gram_schmidt_info.gs_basis;
 
-    if (N < 5){
-        double ans = sqrt(dot_product(basis[0], basis[0], N));
-        double temp;
-        for (int i = 0; i < N; i++){
-            temp = sqrt(dot_product(basis[i], basis[i], N));
-            if (temp < ans){
-                ans = temp;
-            }
-        }
-        for (int i = 0; i < N; i++){
-            free(mu[i]);
-            free(gs_basis[i]);
-            free(basis[i]);
-            }
-        free(mu);
-        free(gs_basis);                
-        free(basis);
-        return ans;
-    }
+    // if (N < 5){
+    //     double ans = sqrt(dot_product(basis[0], basis[0], N));
+    //     double temp;
+    //     for (int i = 0; i < N; i++){
+    //         temp = sqrt(dot_product(basis[i], basis[i], N));
+    //         if (temp < ans){
+    //             ans = temp;
+    //         }
+    //     }
+    //     for (int i = 0; i < N; i++){
+    //         free(mu[i]);
+    //         free(gs_basis[i]);
+    //         free(basis[i]);
+    //         }
+    //     free(mu);
+    //     free(gs_basis);                
+    //     free(basis);
+    //     return ans;
+    // }
 
 
     // get search area (upper bound where solution can be found)

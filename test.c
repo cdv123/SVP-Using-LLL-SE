@@ -100,57 +100,59 @@ double get_ans(char * string){
 
 int main(int argc, char* argv[]){
     
-    FILE * fptr = fopen("test2.txt", "r");
-    FILE * fptr2 = fopen("test_results.txt", "r");  
-
+    // FILE * fptr = fopen("test2.txt", "r");
+    FILE * fptr2 = fopen("uniform_vector_results.txt", "r");  
+    FILE * fptr3 = fopen("uniform_results.txt", "w");
     int file_length = atoi(argv[1]);
-    printf("%d\n", file_length);
-    double * results = malloc(sizeof(double)*file_length);
-    results[45] = 0;
+    // printf("%d\n", file_length);
+    // double * results = malloc(sizeof(double)*file_length);
+    // results[45] = 0;
     char myString[10000];
-    int i = 0;
+    // int i = 0;
 
-    while (fgets(myString, 10000, fptr)){
-        int N = get_dim(myString);
-        // printf("%d\n", N);
-        double ** basis = decode_input(myString, N);
-        results[i] = svp(basis, N);
-        // results[i] = 0;
-        i++;
-    }
+    // while (fgets(myString, 10000, fptr)){
+    //     int N = get_dim(myString);
+    //     // printf("%d\n", N);
+    //     double ** basis = decode_input(myString, N);
+    //     results[i] = svp(basis, N);
+    //     // results[i] = 0;
+    //     i++;
+    // }
 
     int index = 0;
     if (fptr2 == NULL){
         printf("Error opening file");
     }
     while (fgets(myString, 10000, fptr2)){
-        if (index < file_length){
-            double ans = get_ans(myString);
-            // printf("%Lf %Lf\n", ans, results[index]);
-            double percen_diff = fabs(ans-results[index])/results[index];
-            results[index] = percen_diff;
-            index++;
-        }
-
+        double ans = get_ans(myString);
+        fprintf(fptr3, "%f", ans);
+        fprintf(fptr3, "\n");
+        // if (index < file_length){
+        //     // double ans = get_ans(myString);
+        //     // printf("%Lf %Lf\n", ans, results[index]);
+        //     // double percen_diff = fabs(ans-results[index])/results[index];
+        //     // results[index] = percen_diff;
+        //     // index++;
+        // }
     }
 
-    fclose(fptr);
+    fclose(fptr3);
     fclose(fptr2);
     
 
-    FILE *file = fopen("accuracy_result.txt", "w");
+    // FILE *file = fopen("accuracy_result.txt", "w");
 
-    if (file == NULL){
-        perror("Error opening file");
-        return -1;
+    // if (file == NULL){
+    //     perror("Error opening file");
+    //     return -1;
 
-    }
-    for (int j = 0; j < file_length; j++){
-        fprintf(file, "%Lf", results[j]);
-        fprintf(file, "\n");
-    }
-    free(results);
-    fclose(file);
+    // }
+    // for (int j = 0; j < file_length; j++){
+    //     fprintf(file, "%Lf", results[j]);
+    //     fprintf(file, "\n");
+    // }
+    // free(results);
+    // fclose(file);
     // FILE * fptr = fopen("new_test2.txt", "r");
     // FILE * file = fopen("dimensions2.txt", "w");
 
