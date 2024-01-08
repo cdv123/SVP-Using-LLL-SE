@@ -12,12 +12,12 @@ import matplotlib.pyplot as plt
 def generate_lattices(num):
 
     for i in range(num):
-        dim = str(random.randint(1,20))
+        dim = str(random.randint(1,40))
         seed = str(random.randint(1,10000))
         subprocess.Popen(['./generate_lattice.sh', seed, dim])
         time.sleep(0.1)
     
-    test_file = open('new_tests.txt', "r")
+    test_file = open('uniform_test_cases.txt', "r")
     test_cases = test_file.readlines()
 
     for i in range(len(test_cases)):
@@ -27,14 +27,14 @@ def generate_lattices(num):
 
     test_file.close()
 
-    new_file = open('new_test2.txt', 'w')
+    new_file = open('uniform_test_cases2.txt', 'w')
     new_file.writelines(test_cases)
     new_file.close
 
 def generate_hard_lattices(num):
 
     for i in range(num):
-        dim = str(random.randint(1,15))
+        dim = str(random.randint(1,10))
         seed = str(random.randint(1, 10000))
         a = os.popen(f"latticegen -randseed {seed} r {dim} 32").read()
         a = a.replace("\n", "")
@@ -61,7 +61,8 @@ def generate_hard_lattices(num):
     new_file.writelines(test_cases)
     new_file.close
 
-generate_hard_lattices(1000)
+# generate_hard_lattices(1000)
+generate_lattices(1000)
 
 # time all tests
 def get_time():
@@ -71,17 +72,13 @@ def get_time():
     lll_only = []
     bad_bound = []
 
-    time_file = open("out2.txt", "r")
+    time_file = open("hard_problems_time.txt", "r")
     time_file = time_file.read()
     indices_list = find_substring_indices(time_file, "Time")
 
     i = 0
     while i < len(indices_list):
-        lll_only.append(interpret_text(time_file, indices_list[i]))
-        i+=1
         no_lll.append(interpret_text(time_file, indices_list[i]))
-        i+=1
-        bad_bound.append(interpret_text(time_file, indices_list[i]))
         i+=1
         runme.append(interpret_text(time_file, indices_list[i]))
         i+=1
@@ -89,32 +86,34 @@ def get_time():
     #     print(time_file[i+23:i+26])
 
     dims = []
-    dim_file = open("dimensions2.txt", "r")
+    dim_file = open("dimensions_hard_problems.txt", "r")
     lines = dim_file.readlines()
     for line in lines:
         dims.append(int(line))
     
-    x = dims[:88]
+    x = dims[:434]
     length = len(x)
     i = 0
-    while i < length:
-        if x[i] > 50:
-            x.pop(i)
-            no_lll.pop(i)
-            lll_only.pop(i)
-            runme.pop(i)
-            bad_bound.pop(i)
-            length-=1
-            i-=1
-        i+=1
+    # while i < length:
+    #     if x[i] > 50:
+    #         x.pop(i)
+    #         no_lll.pop(i)
+    #         lll_only.pop(i)
+    #         runme.pop(i)
+    #         bad_bound.pop(i)
+    #         length-=1
+    #         i-=1
+    #     i+=1
     x = np.array(x)
+    print(np.shape(x))
     y = np.array(runme)
+    print(np.shape(y))
     y1 = np.array(no_lll)
 
     # Calculate the line of best fit
-    lll_enum = np.reshape(np.dstack((x,y)), (88,2))
+    lll_enum = np.reshape(np.dstack((x,y)), (length,2))
     print(np.shape(lll_enum))
-    enum_only = np.reshape(np.dstack((x,y1)), (88,2))
+    enum_only = np.reshape(np.dstack((x,y1)), (length,2))
     print(np.shape(enum_only))
 
     runme_frame = pd.DataFrame(lll_enum, columns = ["dimensions", "time (ms)"])
@@ -122,8 +121,8 @@ def get_time():
 
     plt.yscale('log')
     # runme_frame["time (ms)"] = runme_frame["time (ms)"].rolling( 5).mean()
-    sns.scatterplot(x="dimensions", y="time (ms)", data=runme_frame, label = "Enum + LLL")
-    sns.scatterplot(x="dimensions", y="time (ms)", data=enum_frame, label = "Enum Only")
+    sns.lineplot(x="dimensions", y="time (ms)", data=runme_frame, label = "Enum + LLL")
+    sns.lineplot(x="dimensions", y="time (ms)", data=enum_frame, label = "Enum Only")
     leg = plt.legend(loc='upper center')
     plt.savefig('foo.png')
 

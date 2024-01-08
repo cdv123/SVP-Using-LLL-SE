@@ -100,9 +100,9 @@ double get_ans(char * string){
 
 int main(int argc, char* argv[]){
     
-    // FILE * fptr = fopen("test2.txt", "r");
+    FILE * fptr = fopen("hard_problems2.txt", "r");
     FILE * fptr2 = fopen("uniform_vector_results.txt", "r");  
-    FILE * fptr3 = fopen("uniform_results.txt", "w");
+    FILE * fptr3 = fopen("dimensions_uniform_problems.txt", "w");
     int file_length = atoi(argv[1]);
     // printf("%d\n", file_length);
     // double * results = malloc(sizeof(double)*file_length);
@@ -119,25 +119,25 @@ int main(int argc, char* argv[]){
     //     i++;
     // }
 
-    int index = 0;
-    if (fptr2 == NULL){
-        printf("Error opening file");
-    }
-    while (fgets(myString, 10000, fptr2)){
-        double ans = get_ans(myString);
-        fprintf(fptr3, "%f", ans);
-        fprintf(fptr3, "\n");
-        // if (index < file_length){
-        //     // double ans = get_ans(myString);
-        //     // printf("%Lf %Lf\n", ans, results[index]);
-        //     // double percen_diff = fabs(ans-results[index])/results[index];
-        //     // results[index] = percen_diff;
-        //     // index++;
-        // }
-    }
+    // int index = 0;
+    // if (fptr2 == NULL){
+    //     printf("Error opening file");
+    // }
+    // while (fgets(myString, 10000, fptr2)){
+    //     double ans = get_ans(myString);
+    //     fprintf(fptr3, "%f", ans);
+    //     fprintf(fptr3, "\n");
+    //     // if (index < file_length){
+    //     //     // double ans = get_ans(myString);
+    //     //     // printf("%Lf %Lf\n", ans, results[index]);
+    //     //     // double percen_diff = fabs(ans-results[index])/results[index];
+    //     //     // results[index] = percen_diff;
+    //     //     // index++;
+    //     // }
+    // }
 
-    fclose(fptr3);
-    fclose(fptr2);
+    // fclose(fptr3);
+    // fclose(fptr2);
     
 
     // FILE *file = fopen("accuracy_result.txt", "w");
@@ -157,26 +157,26 @@ int main(int argc, char* argv[]){
     // FILE * file = fopen("dimensions2.txt", "w");
 
     // int file_length = atoi(argv[1]);
-    // int * dimensions = malloc(sizeof(int)*file_length);
+    int * dimensions = malloc(sizeof(int)*file_length);
 
     // char myString[100000];
-    // int i = 0;
+    int i = 0;
 
-    // while (fgets(myString, 100000, fptr)){
-    //     // int N = get_dim(myString);
-    //     dimensions[i] = get_dim(myString);
-    //     // printf("%d\n", N);
-    //     // double ** basis = decode_input(myString, N);
-    //     // results[i] = svp(basis, N);
-    //     // results[i] = 0;
-    //     i++;
-    // }
+    while (fgets(myString, 100000, fptr)){
+        // int N = get_dim(myString);
+        dimensions[i] = get_dim(myString);
+        // printf("%d\n", N);
+        // double ** basis = decode_input(myString, N);
+        // results[i] = svp(basis, N);
+        // results[i] = 0;
+        i++;
+    }
 
-    // for (int j = 0; j < file_length; j++){
-    //     fprintf(file, "%d", dimensions[j]);
-    //     fprintf(file, "\n");
-    // }
+    for (int j = 0; j < file_length; j++){
+        fprintf(fptr3, "%d", dimensions[j]);
+        fprintf(fptr3, "\n");
+    }
 
-    // fclose(fptr);
-    // fclose(file);
+    fclose(fptr);
+    fclose(fptr3);
 }

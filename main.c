@@ -35,15 +35,22 @@ void read_input(double ** basis, int argc, char* argv[], int N){
     int index = 0;
     int extra = 0;
     for (int i = 0; i < N; i++){
+
+        // allocate space ith basis vector
         basis[i] = malloc(sizeof(double)*N);
         for (int j = 0; j<N; j++){
+
+            // if [ present, add 1 to index with strtod, to not include [ within strtod
             if (argv[index][0] == '['){
                 extra = 1;
             }
             else{
                 extra = 0;
             }
+            // convert input to double
             basis[i][j] = strtod(argv[index]+extra, NULL);
+
+            // go to next element within basis vector
             index+=1;
         }
     }
