@@ -1,5 +1,6 @@
 CC = gcc -O3
 CFLAGS = -I.
+# replace DEPS so that it gets all the header files needed
 DEPS = vector_math_functions.h gram_schmidt.h svp.h
 
 all: main.o gram_schmidt.o vector_math_functions.o svp.o

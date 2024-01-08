@@ -62,17 +62,15 @@ def generate_hard_lattices(num):
     new_file.close
 
 # generate_hard_lattices(1000)
-generate_lattices(1000)
+# generate_lattices(1000)
 
 # time all tests
 def get_time():
 
     no_lll = []
     runme = []
-    lll_only = []
-    bad_bound = []
 
-    time_file = open("hard_problems_time.txt", "r")
+    time_file = open("uniform_time_results.txt", "r")
     time_file = time_file.read()
     indices_list = find_substring_indices(time_file, "Time")
 
@@ -86,35 +84,20 @@ def get_time():
     #     print(time_file[i+23:i+26])
 
     dims = []
-    dim_file = open("dimensions_hard_problems.txt", "r")
+    dim_file = open("dimensions_uniform_problems.txt", "r")
     lines = dim_file.readlines()
     for line in lines:
         dims.append(int(line))
     
-    x = dims[:434]
+    x = dims[:1000]
     length = len(x)
-    i = 0
-    # while i < length:
-    #     if x[i] > 50:
-    #         x.pop(i)
-    #         no_lll.pop(i)
-    #         lll_only.pop(i)
-    #         runme.pop(i)
-    #         bad_bound.pop(i)
-    #         length-=1
-    #         i-=1
-    #     i+=1
     x = np.array(x)
-    print(np.shape(x))
     y = np.array(runme)
-    print(np.shape(y))
     y1 = np.array(no_lll)
 
     # Calculate the line of best fit
     lll_enum = np.reshape(np.dstack((x,y)), (length,2))
-    print(np.shape(lll_enum))
     enum_only = np.reshape(np.dstack((x,y1)), (length,2))
-    print(np.shape(enum_only))
 
     runme_frame = pd.DataFrame(lll_enum, columns = ["dimensions", "time (ms)"])
     enum_frame = pd.DataFrame(enum_only, columns = ["dimensions", "time (ms)"])
@@ -124,7 +107,7 @@ def get_time():
     sns.lineplot(x="dimensions", y="time (ms)", data=runme_frame, label = "Enum + LLL")
     sns.lineplot(x="dimensions", y="time (ms)", data=enum_frame, label = "Enum Only")
     leg = plt.legend(loc='upper center')
-    plt.savefig('foo.png')
+    plt.savefig('foo3.png')
 
 def find_substring_indices(main_string, substring):
     return [i for i in range(len(main_string)) if main_string.startswith(substring, i)]
@@ -135,8 +118,46 @@ def interpret_text(string, index):
         coefficient = 1000
     return float(string[index+19:index+26].strip())*coefficient
 
+def get_memory(file_memory, file_dim):
+
+    lines = open(file_memory).readlines()
+    dimensions = [int(line) for line in open(file_dim).readlines()]
+    mem_runme = []
+    mem_nolll = []
+    i = 0
+
+    for line in lines:
+
+        line = line.replace("heap total: ", "")
+
+        if i % 2 == 0:
+            mem_runme.append(float(line))
+        else:
+            mem_nolll.append(float(line))
+        
+        i+=1
+    
+    length = len(dimensions)
+    dimensions, mem_runme, mem_nolll = np.array(dimensions), np.array(mem_runme), np.array(mem_nolll)
+
+    # Calculate the line of best fit
+    lll_enum = np.reshape(np.dstack((dimensions, mem_runme)), (length,2))
+    enum_only = np.reshape(np.dstack((dimensions,mem_nolll)), (length,2))
+
+    runme_frame = pd.DataFrame(lll_enum, columns = ["dimensions", "memory use (bytes)"])
+    enum_frame = pd.DataFrame(enum_only, columns = ["dimensions", "memory use (bytes)"])
+    # runme_frame["time (ms)"] = runme_frame["time (ms)"].rolling( 5).mean()
+    sns.lineplot(x="dimensions", y="memory use (bytes)", data=runme_frame, label = "Enum + LLL")
+    sns.lineplot(x="dimensions", y="memory use (bytes)", data=enum_frame, label = "Enum Only")
+    leg = plt.legend(loc='upper center')
+    plt.savefig('foo3.png')
+
+
+
 # get_time()
 # get memory for all tests
+
+get_memory("out.txt", "dimensions_uniform_problems.txt")
 
 # put into numpy arrays
 

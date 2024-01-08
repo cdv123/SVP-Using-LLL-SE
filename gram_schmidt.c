@@ -6,8 +6,10 @@
 // Function to get Gram Schmidt information from set of basis vectors
 void gram_schmidt(double ** basis, int N, gs_info gram_schmidt_info){
     
+    // extract gram schmidt info
     double ** gs_basis = gram_schmidt_info.gs_basis;
     double ** mu = gram_schmidt_info.mu;
+    double * norm = gram_schmidt_info.norm;
 
     // main loop for gram schmidt
     for (int i = 0; i < N; i++){
@@ -21,19 +23,19 @@ void gram_schmidt(double ** basis, int N, gs_info gram_schmidt_info){
         for (int k = 0; k < i; k++){
 
             // get gram schmidt coefficient
-            mu[i][k] = dot_product(basis[i], gs_basis[k], N) / dot_product(gs_basis[k], gs_basis[k], N);
+            mu[i][k] = dot_product(basis[i], gs_basis[k], N) / norm[k];
 
             // use gram schmidt coefficient to get projection
             for (int j = 0; j < N; j++){
                 gs_basis[i][j] -= (mu[i][k] * gs_basis[k][j]);
             }
+
         }
 
-    }
-
-    // set diagonal to 1s so that B = B* x mu
-    for (int i = 0; i < N; i++){
+        // memoize norm for future processing
+        norm[i] = dot_product(gs_basis[i], gs_basis[i], N);
         mu[i][i] = 1;
+
     }
 
 }
