@@ -152,12 +152,13 @@ def get_memory(file_memory, file_dim):
     leg = plt.legend(loc='upper center')
     plt.savefig('foo3.png')
 
-
+generate_hard_lattices(100)
+generate_lattices(100)
 
 # get_time()
 # get memory for all tests
 
-get_memory("out.txt", "dimensions_uniform_problems.txt")
+# get_memory("out.txt", "dimensions_uniform_problems.txt")
 
 # put into numpy arrays
 

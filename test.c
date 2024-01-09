@@ -6,7 +6,7 @@
 
 // get nummber of dimensions from input
 int get_dim(char * string){
-    // printf("%s\n", string);
+
     int length = strlen(string);
     int N = 0;
     for (int i = 0; i < length; i++){
@@ -14,18 +14,11 @@ int get_dim(char * string){
             N++;
         }
     }
+    
     return N;
 }
 
-void print_2d_arr(double ** arr, int N){
-    for (int i = 0; i < N; i++){
-        for (int j = 0; j < N; j++){
-            printf("%Lf ", arr[i][j]);
-        }
-        printf("\n");
-    }
-}
-
+// transform string from text file to double
 double ** decode_input(char * string, int N){
 
     int length = strlen(string);
@@ -33,6 +26,7 @@ double ** decode_input(char * string, int N){
     int i = 0;
     int index = 0;
     int j = 0;
+
     while (i < length){
         if (string[i] == '['){
             basis[index] = malloc(sizeof(double)*N); 
@@ -99,8 +93,8 @@ double get_ans(char * string){
 
 int main(int argc, char* argv[]){
     
-    FILE * fptr = fopen("uniform_test_cases2.txt", "r");
-    FILE * fptr2 = fopen("uniform_vector_results.txt", "r");  
+    FILE * fptr = fopen("test_cases.txt", "r");
+    FILE * fptr2 = fopen("test_vector_results.txt", "r");  
 
     int file_length = atoi(argv[1]);
     double * results = malloc(sizeof(double)*file_length);
@@ -128,7 +122,7 @@ int main(int argc, char* argv[]){
         }
     }
 
-    FILE *file = fopen("hard_accuracy_result.txt", "w");
+    FILE *file = fopen("test_accuracy_result.txt", "w");
 
     if (file == NULL){
         perror("Error opening file");
@@ -137,12 +131,11 @@ int main(int argc, char* argv[]){
     }
     double mean = 0;
     for (int j = 0; j < file_length; j++){
-        printf("%f\n", results[j]);
         mean+= results[j];
         fprintf(file, "%f", results[j]);
         fprintf(file, "\n");
     }
-    printf("The average percentage different to results given by fplll was %f", mean/file_length);
+    printf("The average percentage different to results given by fplll was %f%%\n", mean/file_length);
     free(results);
     fclose(file);
     

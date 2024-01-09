@@ -89,27 +89,6 @@ double svp(double ** basis, int N){
     double ** gs_basis = gram_schmidt_info.gs_basis;
     double * norm = gram_schmidt_info.norm;
 
-    // if (N < 5){
-    //     double ans = sqrt(dot_product(basis[0], basis[0], N));
-    //     double temp;
-    //     for (int i = 0; i < N; i++){
-    //         temp = sqrt(dot_product(basis[i], basis[i], N));
-    //         if (temp < ans){
-    //             ans = temp;
-    //         }
-    //     }
-    //     for (int i = 0; i < N; i++){
-    //         free(mu[i]);
-    //         free(gs_basis[i]);
-    //         free(basis[i]);
-    //         }
-    //     free(mu);
-    //     free(gs_basis);                
-    //     free(basis);
-    //     return ans;
-    // }
-
-
     // get search area (upper bound where solution can be found)
     double r_squared = get_search_area(gs_basis, N);
 
