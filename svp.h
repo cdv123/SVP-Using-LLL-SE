@@ -1,10 +1,10 @@
 #include "gram_schmidt.h"
 
-double get_search_area(double ** basis, int N);
+double get_search_area(double * norm, int N);
 
-void size_reduction(double ** basis, double ** mu, int k, int N, double * temp);
+void size_reduce(double ** basis, double ** mu, int k, int N, double * temp);
 
-void LLL(double ** basis, int N, gs_info gram_schmidt_info);
+int LLL(double ** basis, int N, gs_info gram_schmidt_info);
 
 double svp(double ** basis, int N);
 
